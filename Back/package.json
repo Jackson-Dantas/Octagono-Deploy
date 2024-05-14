@@ -15,7 +15,7 @@
     "node": "20.12.0"
   },
   "scripts": {
-    "start": "node app.js",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
