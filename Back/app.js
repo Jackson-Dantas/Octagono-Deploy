@@ -4,6 +4,7 @@ const handlebars = require("express-handlebars");
 const bodyParser = require("body-parser");
 const aluno = require("./models/Alunos");
 const falta = require("./models/Faltas");
+const path = require('path');
 
 app.engine('handlebars', handlebars.engine({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
@@ -11,6 +12,12 @@ app.set('view engine', 'handlebars');
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+//Page principal: 
+app.use(express.static(path.join(__dirname,'../Front')));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../Front', 'index.html'));
+});
 
 //Rota Cadastrar Aluno
 app.get('/cadAluno', function(req, res){
