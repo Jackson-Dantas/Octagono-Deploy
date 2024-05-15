@@ -25,6 +25,7 @@ app.get('/cadAluno', function(req, res){
 });
 
 app.post('/cadastro', function(req, res){
+    
     aluno.create({
         name: req.body.nome,
         turma: req.body.turma,
@@ -32,6 +33,11 @@ app.post('/cadastro', function(req, res){
         responsavel_nome: req.body.responsavel_nome,
         responsavel_email: req.body.responsavel_email
     })
+
+    const success = true;
+    const message = success ? 'Cadastro efetuado com sucesso!' : 'Erro ao cadastrar. Tente novamente.';
+
+    res.json({ success, message });
 });
 
 //Rota Cadastrar Faltas

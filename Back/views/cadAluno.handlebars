@@ -75,7 +75,30 @@
         </div> 
     </div>
    </footer>
-    
+   
+   <script>
+        const btnCadastrar = document.getElementById('btnCadastrar');
+
+        btnCadastrar.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/cadastro', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                    
+                });
+                const data = await response.json();
+                alert(data.message); 
+                if (data.success) {
+                    
+                    window.location.href = './mainHome.htm';
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        });
+    </script>
  
 </body>
 </html>
