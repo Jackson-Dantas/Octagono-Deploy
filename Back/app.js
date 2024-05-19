@@ -39,6 +39,12 @@ app.post('/register', async (req, res) => {
     }
 });
 
+//Rota para Login: 
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '../Front', 'login.html'));
+});
+
 //Rota Cadastrar Aluno
 app.get('/cadAluno', function(req, res){
     res.render("cadAluno");

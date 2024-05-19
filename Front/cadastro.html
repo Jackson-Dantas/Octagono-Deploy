@@ -37,11 +37,16 @@
                 const password = document.getElementById("password").value.trim();
                 const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
+                if (password.length < 8) {
+                    alert("A senha deve conter no mínimo 8 caracteres.");
+                    return;
+               }
+
                 if (password !== confirmPassword) {
                     alert("As senhas não coincidem. Por favor, verifique.");
                     return;
-                }
-
+                } 
+                
                 createUserWithEmailAndPassword(auth, email, password)
                     .then((userCredential) => {
                         alert("Cadastro efetuado com sucesso!");
@@ -100,15 +105,15 @@
                                     <label for="floatingInput">Cargo</label>
                                 </div>
                                 <div class="form-floating">
-                                    <input type="email" class="form-control input-login email" id="floatingInput" placeholder="email@example.com">
+                                    <input type="email" class="form-control input-login email" id="email" placeholder="email@example.com">
                                     <label for="floatingInput">E-mail</label>
                                 </div>
                                 <div class="form-floating">
-                                    <input type="password" class="form-control input-login senha" id="floatingInput" placeholder="password">
+                                    <input type="password" class="form-control input-login senha" id="password" placeholder="password">
                                     <label for="floatingInput">Senha</label>
                                 </div>
                                 <div class="form-floating">
-                                    <input type="password" class="form-control input-login confirmaSenha" id="floatingInput" placeholder="password">
+                                    <input type="password" class="form-control input-login confirmaSenha" id="confirmPassword" placeholder="password">
                                     <label for="floatingInput">Confirme a senha</label>
                                 </div>
                                 
@@ -130,7 +135,7 @@
     </div>
    </footer>
     
- <script>
+ <!-- <script>
 
 document.addEventListener("DOMContentLoaded", function() {
     
@@ -169,7 +174,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
- </script>
+ </script> -->
 
 </body>
 </html>
