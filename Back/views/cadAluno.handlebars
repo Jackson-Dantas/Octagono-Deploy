@@ -75,7 +75,53 @@
         </div> 
     </div>
    </footer>
-   
+
+   <script>
+    const cadastro = document.getElementById('btnCadastrar');
+
+    cadastro.addEventListener('click', async () => {
+    try {
+        const response = await fetch('/cadastro', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const data = await response.json();
+        console.log(data); // Verifique os dados recebidos do servidor
+
+        if (data.success) {
+            alert(data.message);
+        } else {
+            alert('Erro ao cadastrar. Por favor, tente novamente.');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao enviar solicitação. Por favor, tente novamente.');
+    }
+});
+
+    /*cadastro.addEventListener('click', async() => {
+        fetch('/cadastro', {
+        method: 'POST',
+        headers: {
+                'Content-Type': 'application/json'
+            }
+           
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Exibe a mensagem recebida do servidor em um alerta
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao enviar solicitação. Por favor, tente novamente.');
+        });
+    }) */
+        
+   </script>
  
 </body>
 </html>

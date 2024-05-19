@@ -4,6 +4,7 @@ const handlebars = require("express-handlebars");
 const bodyParser = require("body-parser");
 const aluno = require("./models/Alunos");
 const falta = require("./models/Faltas");
+const admin = require("./firebase/firebaseAdmin");
 const path = require('path');
 
 app.engine('handlebars', handlebars.engine({defaultLayout: 'main'}));
@@ -19,6 +20,25 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../Front', 'index.html'));
 });
 
+//Rota de Cadastrar User:
+app.get('/cadastroUser', (req, res) => {
+    res.sendFile(path.join(__dirname, '../Front', 'cadastro.html'));
+});
+
+app.post('/register', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        const userRecord = await admin.auth().createUser({
+            email,
+            password
+        });
+        res.status(200).send({ success: true, message: "Usuário registrado com sucesso", userRecord });
+    } catch (error) {
+        res.status(400).send({ success: false, message: error.message });
+    }
+});
+
 //Rota Cadastrar Aluno
 app.get('/cadAluno', function(req, res){
     res.render("cadAluno");
@@ -32,7 +52,16 @@ app.post('/cadastro', function(req, res){
         faltas: req.body.faltas,
         responsavel_nome: req.body.responsavel_nome,
         responsavel_email: req.body.responsavel_email
-    })
+    }).then(() => {
+        // Usuário criado com sucesso
+        const message = `Cadastro feito com sucesso`;
+        res.json({sucess: true, message: message});
+      }).catch(error => {
+        // Erro ao criar usuário
+        const errorMessage = `Houve error ao cadastrar o aluno!`;
+        res.json({sucess: false, message: errorMessage})
+        
+      });
 });
 
 //Rota Cadastrar Faltas
