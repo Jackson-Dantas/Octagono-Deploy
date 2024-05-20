@@ -13,8 +13,7 @@ a{
 
 
 .btnHover:hover{
-    /* color: rgb(0, 0, 0); */
-    color: chartreuse;
+    color: rgb(0, 0, 0); 
     font-size: larger;
 }
 

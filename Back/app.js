@@ -84,7 +84,34 @@ app.post('/cadastro-turma', (req, res) => {
 
 //-----------------Rota Cadastrar Aluno------------------------
 
-app.get('/cadAluno', function(req, res){
+app.get('/cadAluno', async (req, res) => {
+    try {
+        const turmas = await Turma.findAll();
+        const turmasPlain = turmas.map(turma => turma.get({ plain: true }));
+        res.render("cadAluno", { turmas: turmasPlain });
+    } catch (error) {
+        res.status(500).send({ success: false, message: error.message });
+    }
+});
+
+app.post('/cadastro', function (req, res) {
+    aluno.create({
+        name: req.body.nome,
+        turma: req.body.turma,
+        faltas: req.body.faltas,
+        responsavel_nome: req.body.responsavel_nome,
+        responsavel_email: req.body.responsavel_email
+    }).then(() => {
+        const message = `Cadastro feito com sucesso`;
+        res.status(200).json({ success: true, message: message });
+    }).catch(error => {
+        const errorMessage = `Houve erro ao cadastrar o aluno!`;
+        res.status(400).json({ success: false, message: errorMessage });
+    });
+});
+
+/**
+ * app.get('/cadAluno', function(req, res){
     res.render("cadAluno");
 });
 
@@ -103,6 +130,8 @@ app.post('/cadastro', function(req, res){
         res.status(400).json({ success: false, message: errorMessage });
     });
 });
+ */
+
 
 /*
 >>>>>>>>>>>>> Código Legado<<<<<<<<
@@ -134,17 +163,51 @@ app.post('/cadastro', function(req, res){
 
 //----------------------Rota Cadastrar Faltas----------------------------------
 
-app.get('/cadFaltas', function(req, res){
-    res.render("cadFaltas");
+app.get('/cadFaltas', async (req, res) => {
+    try {
+        const alunos = await aluno.findAll();
+        const alunosPlain = alunos.map(aluno => aluno.get({ plain: true }));
+        res.render("cadFaltas", { alunos: alunosPlain });
+    } catch (error) {
+        res.status(500).send({ success: false, message: error.message });
+    }
 });
 
-app.post('/cadastro-faltas', function(req, res){
-    falta.create({
-        name: req.body.nome,
-        turma: req.body.turma,
-        faltas: req.body.faltas,
-    })
+app.post('/cadastro-faltas', async (req, res) => {
+    const { alunoId, faltas } = req.body;
+
+    try {
+        // Verificar se o aluno existe
+        const alunoExistente = await aluno.findByPk(alunoId);
+
+        if (!alunoExistente) {
+            return res.status(404).json({ success: false, message: "Aluno não encontrado" });
+        }
+
+        // Atualizar o número de faltas
+        alunoExistente.faltas += parseInt(faltas, 10);
+        await alunoExistente.save();
+
+        res.status(200).json({ success: true, message: "Falta cadastrada com sucesso" });
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
 });
+
+/*
+// app.get('/cadFaltas', function(req, res){
+//     res.render("cadFaltas");
+// });
+
+// app.post('/cadastro-faltas', function(req, res){
+//     falta.create({
+//         name: req.body.nome,
+//         turma: req.body.turma,
+//         faltas: req.body.faltas,
+//     })
+// });
+*/
+
 
 //----------------------Rota para Listar Faltas-------------------------------
 app.get('/listarFaltas', function(req, res){
