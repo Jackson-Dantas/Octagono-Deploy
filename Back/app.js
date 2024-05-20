@@ -6,6 +6,7 @@ const aluno = require("./models/Alunos");
 const falta = require("./models/Faltas");
 const admin = require("./firebase/firebaseAdmin");
 const path = require('path');
+const Turma = require("./models/Turma");
 
 app.engine('handlebars', handlebars.engine({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
@@ -39,13 +40,72 @@ app.post('/register', async (req, res) => {
     }
 });
 
-//Rota para Login: 
+//----------------Rota para Login: ----------------------------------
 
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '../Front', 'login.html'));
 });
 
-//Rota Cadastrar Aluno
+//------------------Rota para cadastrar turma-----------------
+
+app.get('/cadTurma', (req, res) => {
+    res.sendFile(path.join(__dirname, '../Front', 'cadTurma.html'));
+});
+
+app.post('/cadastro-turma', (req, res) => {
+    const { nome } = req.body;
+
+    Turma.create({
+        nome: nome
+    }).then(() => {
+        res.status(200).json({ success: true, message: "Turma cadastrada com sucesso" });
+    }).catch(error => {
+        res.status(400).json({ success: false, message: error.message });
+    });
+});
+
+/*
+app.get('/cadTurma', (req, res) => {
+    res.sendFile(path.join(__dirname, '../Front', 'cadTurma.html'));
+});
+
+app.post('/cadastro-turma', (req, res) => {
+    const { nome } = req.body;
+
+    Turma.create({
+        nome: nome
+    }).then(() => {
+        res.status(200).send({ success: true, message: "Turma cadastrada com sucesso" });
+    }).catch(error => {
+        res.status(400).send({ success: false, message: error.message });
+    });
+});
+*/
+
+//-----------------Rota Cadastrar Aluno------------------------
+
+app.get('/cadAluno', function(req, res){
+    res.render("cadAluno");
+});
+
+app.post('/cadastro', function(req, res){
+    aluno.create({
+        name: req.body.nome,
+        turma: req.body.turma,
+        faltas: req.body.faltas,
+        responsavel_nome: req.body.responsavel_nome,
+        responsavel_email: req.body.responsavel_email
+    }).then(() => {
+        const message = `Cadastro feito com sucesso`;
+        res.status(200).json({ success: true, message: message });
+    }).catch(error => {
+        const errorMessage = `Houve erro ao cadastrar o aluno!`;
+        res.status(400).json({ success: false, message: errorMessage });
+    });
+});
+
+/*
+>>>>>>>>>>>>> Código Legado<<<<<<<<
 app.get('/cadAluno', function(req, res){
     res.render("cadAluno");
 });
@@ -69,8 +129,10 @@ app.post('/cadastro', function(req, res){
         
       });
 });
+*/
 
-//Rota Cadastrar Faltas
+
+//----------------------Rota Cadastrar Faltas----------------------------------
 
 app.get('/cadFaltas', function(req, res){
     res.render("cadFaltas");
@@ -84,7 +146,7 @@ app.post('/cadastro-faltas', function(req, res){
     })
 });
 
-//Rota para Listar
+//----------------------Rota para Listar Faltas-------------------------------
 app.get('/listarFaltas', function(req, res){
     aluno.findAll({order: [['faltas', 'DESC']]}).then(function(alunos){
         res.render('listarFaltas', {relatorio: alunos});

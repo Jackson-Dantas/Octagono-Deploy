@@ -13,7 +13,9 @@ a{
 
 
 .btnHover:hover{
-    color: black;
+    /* color: rgb(0, 0, 0); */
+    color: chartreuse;
+    font-size: larger;
 }
 
 .btn-warning{
